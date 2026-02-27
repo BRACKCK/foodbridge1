@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
-
 class ImpactConfig(AppConfig):
-    name = 'impact'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.impact"
