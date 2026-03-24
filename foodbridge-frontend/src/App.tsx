@@ -1,43 +1,37 @@
-import { useState } from 'preact/hooks'
-import preactLogo from './assets/preact.svg'
-import viteLogo from '/vite.svg'
-import './app.css'
+import { Routes, Route, Navigate } from "react-router-dom"
+import { useAuth } from "./context/AuthContext"
 
-export function App() {
-  const [count, setCount] = useState(0)
 
+import LoginPage from "./pages/LoginPage"
+import RegisterPage from "./pages/RegisterPage"
+import DashboardPage from "./pages/DashboardPage"
+import DonationsPage from "./pages/DonationsPage"
+import NewDonationPage from "./pages/NewDonationPage"
+import LeaderboardPage from "./pages/LeaderboardPage"
+import ImpactPage from "./pages/ImpactPage"
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, loading } = useAuth()
+  if (loading) return <div className="flex items-center justify-center h-screen">Loading...</div>
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />
+}
+
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <h1>Vite + Preact</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/app.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p>
-        Check out{' '}
-        <a
-          href="https://preactjs.com/guide/v10/getting-started#create-a-vite-powered-preact-app"
-          target="_blank"
-        >
-          create-preact
-        </a>
-        , the official Preact + Vite starter
-      </p>
-      <p class="read-the-docs">
-        Click on the Vite and Preact logos to learn more
-      </p>
-    </>
+    <Routes>
+      {/* Public routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+
+      {/* Protected routes */}
+      <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/donations" element={<ProtectedRoute><DonationsPage /></ProtectedRoute>} />
+      <Route path="/donations/new" element={<ProtectedRoute><NewDonationPage /></ProtectedRoute>} />
+      <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
+      <Route path="/impact" element={<ProtectedRoute><ImpactPage /></ProtectedRoute>} />
+
+      {/* Catch all */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   )
 }

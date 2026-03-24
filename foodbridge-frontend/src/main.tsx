@@ -1,5 +1,16 @@
-import { render } from 'preact'
-import './index.css'
-import { App } from './app.tsx'
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import { BrowserRouter } from "react-router-dom"
+import { AuthProvider } from "./context/AuthContext"
+import App from "./App"
+import "./index.css"
 
-render(<App />, document.getElementById('app')!)
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
+  </StrictMode>
+)
